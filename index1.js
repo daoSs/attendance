@@ -10,14 +10,6 @@ var arr = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月
 var data = {};
 var number = {};
 
-
-// var asd = xlsx.parse(__dirname+'/7月.xlsx');
-
-// console.log(asd[0].data)
-// console.log(asd[0].data[1][10],'carno')
-// console.log(asd[0].data[1][21],'mobile')
-// return
-
 arr.map(function(v,k){
 	try{
 		console.log('正在尝试读取'+v+'数据');
@@ -38,14 +30,18 @@ arr.map(function(v,k){
 		let _map = {};
 		_data.map(function(va,ke){
 			if(ke>0){
-				if(!!va[21]){
-					if(_map[va[21]]){
-						if(_map[va[21]].indexOf(va[10]) == -1){
-							_map[va[21]].push(va[10]);
-						}
-						
+				if(!!va[10]){
+					if(_map[va[10]]){
+                        if(va[21]){
+                            if(_map[va[10]].indexOf(va[21]) == -1){
+                                _map[va[10]].push(va[21]);
+                            }
+                        }
 					}else{
-						_map[va[21]] = [va[10]];
+                        if(va[21]){
+                            _map[va[10]] = [va[21]];
+                        }
+						
 					}
 				}
 				
@@ -55,7 +51,7 @@ arr.map(function(v,k){
 		//console.log(_map)
 
 		let _result = [];
-		_result[0] = ['手机号','车牌号'];
+		_result[0] = ['车牌号','手机号'];
 		for(let abc in _map){
 			var $arr = [abc,..._map[abc]];
 			_result.push($arr);
@@ -79,7 +75,7 @@ arr.map(function(v,k){
 		]);
 		
 		//将文件内容插入新的文件中
-		fs.writeFileSync(v+'output.xlsx',buffer,{'flag':'w'});
+		//fs.writeFileSync(v+'output.xlsx',buffer,{'flag':'w'});
 
 	}
 
@@ -88,7 +84,7 @@ arr.map(function(v,k){
 
 var sres = [];
 
-sres[0] = ['手机号','车牌号'];
+sres[0] = ['车牌号','手机号'];
 
 for(let a in number){
 	if(number[a] && number[a].length && number[a].length>1){
@@ -99,40 +95,12 @@ for(let a in number){
 
 let buffer1 = xlsx.build([
 	{
-		name: '重复车牌号汇总',
+		name: '重复手机号汇总',
 		data:sres
 	}		   
 ]);
 
 //将文件内容插入新的文件中
-fs.writeFileSync('同一手机对应多个车牌.xlsx',buffer1,{'flag':'w'});
+fs.writeFileSync('同一车牌对应多个手机.xlsx',buffer1,{'flag':'w'});
 
 
-return
-// obj.map((v,k)=>{
-// 	console.log(v.name,k)
-// })
-
-
-var buffer = xlsx.build([
-    {
-        name: v,
-        data:_obj.resultwp1d
-	},
-	{
-        name:'posapp1天内',
-        data:_obj.resultpa1d
-	},
-	{
-        name:'微信pos2小时',
-        data:_obj.resultwp2h
-	},
-	{
-        name:'posapp2小时',
-        data:_obj.resultpa2h
-    }  
-	       
-]);
-
-//将文件内容插入新的文件中
-fs.writeFileSync('test2.xlsx',buffer,{'flag':'w'});
